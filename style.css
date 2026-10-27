@@ -1,0 +1,20 @@
+/*
+Theme Name:        Temple
+Theme URI:         https://github.com/JohnDeeBDD/ai-template-theme
+Author:            JohnDeeBDD
+Author URI:        https://github.com/JohnDeeBDD
+Description:       A classic PHP WordPress theme inspired by TempleOS, the operating system Terry A. Davis built by himself. 16-color VGA palette, 8-bit pixel fonts, double-line DolDoc windows, a live status bar with a clock and CPU meters, rainbow titles, blinking text, and an Oracle widget. Uses the Classic Editor and Classic Widgets; the block editor is switched off by default.
+Version:           1.0.0
+Requires at least: 6.0
+Tested up to:      6.8
+Requires PHP:      7.4
+License:           GNU General Public License v2 or later
+License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:       temple
+Tags:              blog, two-columns, right-sidebar, custom-menu, custom-logo, featured-images, footer-widgets, sticky-post, threaded-comments, translation-ready, theme-options
+
+Temple is distributed under the terms of the GNU GPL v2 or later.
+
+The real styles live in assets/css/main.css. This file only carries the
+theme header so WordPress can find the theme.
+*/
