@@ -1,0 +1,1516 @@
+/*
+ * Temple - main stylesheet.
+ *
+ * Everything here is drawn from the 16-color VGA palette that TempleOS uses,
+ * on a white screen with blue text. Windows have double-line borders with the
+ * title sitting in the top edge, the way DolDoc windows do.
+ *
+ *  1. Palette and tokens
+ *  2. Base
+ *  3. Color utilities
+ *  4. Status bar
+ *  5. Header and menu bar
+ *  6. Layout
+ *  7. Windows
+ *  8. Posts and pages
+ *  9. Content typography
+ * 10. Forms and buttons
+ * 11. Widgets
+ * 12. Comments
+ * 13. Navigation and pagination
+ * 14. Footer
+ * 15. WordPress core classes
+ * 16. Motion
+ * 17. Small screens
+ * 18. Print
+ */
+
+/* 1. Palette and tokens ------------------------------------------------- */
+
+:root {
+	--tos-black: #000000;
+	--tos-blue: #0000aa;
+	--tos-green: #00aa00;
+	--tos-cyan: #00aaaa;
+	--tos-red: #aa0000;
+	--tos-purple: #aa00aa;
+	--tos-brown: #aa5500;
+	--tos-ltgray: #aaaaaa;
+	--tos-dkgray: #555555;
+	--tos-ltblue: #5555ff;
+	--tos-ltgreen: #55ff55;
+	--tos-ltcyan: #55ffff;
+	--tos-ltred: #ff5555;
+	--tos-ltpurple: #ff55ff;
+	--tos-yellow: #ffff55;
+	--tos-white: #ffffff;
+
+	--tos-bg: var(--tos-white);
+	--tos-fg: var(--tos-blue);
+	--tos-link: var(--tos-red);
+	--tos-link-visited: var(--tos-purple);
+
+	--tos-font-body: "VT323", "Courier New", ui-monospace, monospace;
+	--tos-font-pixel: "Press Start 2P", "VT323", "Courier New", ui-monospace, monospace;
+
+	--tos-border: 6px;
+	--tos-shadow: 4px 4px 0 var(--tos-blue);
+	--tos-gap: 2rem;
+}
+
+/* 2. Base --------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	background: var(--tos-bg);
+	color: var(--tos-fg);
+	font-family: var(--tos-font-body);
+	font-size: 1.375rem;
+	line-height: 1.3;
+	-webkit-font-smoothing: none;
+	-moz-osx-font-smoothing: grayscale;
+	font-smooth: never;
+	overflow-x: hidden;
+}
+
+body.tos-pixel-cursor,
+body.tos-pixel-cursor button,
+body.tos-pixel-cursor label {
+	cursor: url("../images/cursor-arrow.svg") 0 0, auto;
+}
+
+body.tos-pixel-cursor a,
+body.tos-pixel-cursor button:not(:disabled),
+body.tos-pixel-cursor [role="button"],
+body.tos-pixel-cursor input[type="submit"] {
+	cursor: url("../images/cursor-link.svg") 0 0, pointer;
+}
+
+::selection {
+	background: var(--tos-blue);
+	color: var(--tos-yellow);
+}
+
+a {
+	color: var(--tos-link);
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 3px;
+}
+
+a:visited {
+	color: var(--tos-link-visited);
+}
+
+a:hover {
+	background: var(--tos-blue);
+	color: var(--tos-yellow);
+	text-decoration: none;
+}
+
+:focus-visible {
+	outline: 3px dashed var(--tos-red);
+	outline-offset: 2px;
+}
+
+img,
+video,
+iframe,
+embed,
+object {
+	max-width: 100%;
+}
+
+img {
+	height: auto;
+	vertical-align: middle;
+}
+
+/* 3. Color utilities ---------------------------------------------------- */
+
+.tos-fg-black { color: var(--tos-black); }
+.tos-fg-blue { color: var(--tos-blue); }
+.tos-fg-green { color: var(--tos-green); }
+.tos-fg-cyan { color: var(--tos-cyan); }
+.tos-fg-red { color: var(--tos-red); }
+.tos-fg-purple { color: var(--tos-purple); }
+.tos-fg-brown { color: var(--tos-brown); }
+.tos-fg-dkgray { color: var(--tos-dkgray); }
+
+.tos-dim { color: var(--tos-dkgray); }
+
+.tos-key {
+	color: var(--tos-green);
+}
+
+.tos-sep {
+	color: var(--tos-ltgray);
+	padding: 0 0.5ch;
+}
+
+.tos-rainbow {
+	white-space: pre-wrap;
+}
+
+.tos-cursor {
+	display: inline-block;
+	width: 0.55em;
+	height: 1em;
+	margin-left: 0.15em;
+	background: currentColor;
+	vertical-align: text-bottom;
+	animation: tos-blink 1s steps(1, end) infinite;
+}
+
+.tos-blink {
+	animation: tos-blink 1s steps(1, end) infinite;
+}
+
+@keyframes tos-blink {
+	50% { visibility: hidden; }
+}
+
+/* 4. Status bar --------------------------------------------------------- */
+
+.tos-statusbar {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25rem 1.5ch;
+	padding: 0.1rem 16px;
+	background: var(--tos-blue);
+	color: var(--tos-white);
+	font-size: 1.25rem;
+	line-height: 1.4;
+	white-space: nowrap;
+}
+
+.admin-bar .tos-statusbar {
+	top: 32px;
+}
+
+.tos-statusbar__time {
+	color: var(--tos-yellow);
+}
+
+.tos-statusbar__task {
+	color: var(--tos-ltcyan);
+}
+
+.tos-statusbar__mem {
+	color: var(--tos-ltgreen);
+}
+
+.tos-statusbar__cpu {
+	display: flex;
+	gap: 1ch;
+	margin-left: auto;
+}
+
+.tos-cpu {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5ch;
+}
+
+.tos-cpu__label {
+	color: var(--tos-ltgray);
+}
+
+.tos-cpu__bar {
+	display: inline-block;
+	width: 48px;
+	height: 10px;
+	border: 1px solid var(--tos-white);
+	background: var(--tos-black);
+}
+
+.tos-cpu__fill {
+	display: block;
+	height: 100%;
+	background: var(--tos-ltgreen);
+	transition: width 0.4s steps(4, end);
+}
+
+.tos-cpu.is-hot .tos-cpu__fill {
+	background: var(--tos-ltred);
+}
+
+/* 5. Header and menu bar ----------------------------------------------- */
+
+.site-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem 2rem;
+	padding: 1.25rem max(16px, calc((100% - 1200px) / 2 + 16px));
+	border-bottom: var(--tos-border) double var(--tos-blue);
+}
+
+.site-branding {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25rem 1rem;
+	min-width: 0;
+}
+
+.custom-logo-link {
+	display: inline-block;
+	line-height: 0;
+}
+
+.custom-logo {
+	max-height: 64px;
+	width: auto;
+	image-rendering: pixelated;
+}
+
+.site-title {
+	margin: 0;
+	font-family: var(--tos-font-pixel);
+	font-size: clamp(1.1rem, 2.6vw, 1.75rem);
+	line-height: 1.3;
+	font-weight: 400;
+}
+
+.site-title a,
+.site-title a:visited {
+	color: var(--tos-blue);
+	text-decoration: none;
+}
+
+.site-title a:hover {
+	background: var(--tos-yellow);
+}
+
+.site-description {
+	flex-basis: 100%;
+	margin: 0;
+	color: var(--tos-purple);
+	font-size: 1.375rem;
+}
+
+.main-navigation {
+	position: relative;
+}
+
+.tos-menu {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tos-menu li {
+	position: relative;
+}
+
+.tos-menu a,
+.tos-menu a:visited {
+	display: block;
+	padding: 0.4rem 0.6rem;
+	color: var(--tos-blue);
+	font-family: var(--tos-font-pixel);
+	font-size: 0.6875rem;
+	line-height: 1.4;
+	text-decoration: none;
+}
+
+.tos-menu a::before {
+	content: "$";
+	color: var(--tos-green);
+	margin-right: 0.5ch;
+}
+
+.tos-menu a:hover,
+.tos-menu a:focus-visible,
+.tos-menu .current-menu-item > a,
+.tos-menu .current_page_item > a {
+	background: var(--tos-blue);
+	color: var(--tos-yellow);
+}
+
+.tos-menu ul {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 40;
+	display: none;
+	min-width: 14rem;
+	margin: 0;
+	padding: 0.5rem;
+	list-style: none;
+	background: var(--tos-white);
+	border: var(--tos-border) double var(--tos-purple);
+	box-shadow: var(--tos-shadow);
+}
+
+.tos-menu ul ul {
+	top: -0.5rem;
+	left: 100%;
+}
+
+.tos-menu li:hover > ul,
+.tos-menu li:focus-within > ul {
+	display: block;
+}
+
+.tos-menu .menu-item-has-children > a::after,
+.tos-menu .page_item_has_children > a::after {
+	content: " \25BC";
+	font-size: 0.5rem;
+}
+
+.main-navigation .menu-toggle {
+	display: none;
+}
+
+/* 6. Layout ------------------------------------------------------------- */
+
+.tos-desktop {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 320px;
+	gap: var(--tos-gap);
+	max-width: 1200px;
+	margin: 2.5rem auto;
+	padding: 0 16px;
+}
+
+.no-sidebar .tos-desktop {
+	grid-template-columns: minmax(0, 1fr);
+	max-width: 1000px;
+}
+
+.site-main,
+.widget-area {
+	min-width: 0;
+}
+
+/* 7. Windows ------------------------------------------------------------ */
+
+.tos-window {
+	--tos-win: var(--tos-blue);
+	--tos-win-bg: var(--tos-white);
+	position: relative;
+	margin: 0 0 2.5rem;
+	padding: 1.75rem 1.5rem 1.25rem;
+	background: var(--tos-win-bg);
+	border: var(--tos-border) double var(--tos-win);
+	box-shadow: 6px 6px 0 var(--tos-win);
+}
+
+.tos-border-blue { --tos-win: var(--tos-blue); }
+.tos-border-green { --tos-win: var(--tos-green); }
+.tos-border-cyan { --tos-win: var(--tos-cyan); }
+.tos-border-red { --tos-win: var(--tos-red); }
+.tos-border-purple { --tos-win: var(--tos-purple); }
+.tos-border-brown { --tos-win: var(--tos-brown); }
+
+.tos-border-yellow {
+	--tos-win: var(--tos-brown);
+	--tos-win-bg: var(--tos-yellow);
+}
+
+.tos-window__title,
+.widget .widget-title,
+.widget_block .wp-block-heading:first-child {
+	position: absolute;
+	top: calc(var(--tos-border) * -1 - 0.6rem);
+	left: 50%;
+	transform: translateX(-50%);
+	max-width: calc(100% - 8rem);
+	margin: 0;
+	padding: 0.35rem 0.75ch;
+	overflow: hidden;
+	background: var(--tos-win);
+	color: var(--tos-white);
+	font-family: var(--tos-font-pixel);
+	font-size: 0.625rem;
+	font-weight: 400;
+	line-height: 1.2;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tos-border-yellow .tos-window__title {
+	color: var(--tos-yellow);
+}
+
+.tos-window__close,
+.tos-window__close:visited {
+	position: absolute;
+	top: calc(var(--tos-border) * -1 - 0.85rem);
+	right: 1rem;
+	padding: 0 0.25ch;
+	background: var(--tos-white);
+	color: var(--tos-red);
+	font-size: 1.375rem;
+	line-height: 1.2;
+	text-decoration: none;
+}
+
+.tos-window__close:hover {
+	background: var(--tos-red);
+	color: var(--tos-white);
+}
+
+.tos-window > :last-child {
+	margin-bottom: 0;
+}
+
+/* 8. Posts and pages ---------------------------------------------------- */
+
+.page-header .page-title,
+.entry-title {
+	margin: 0.5rem 0 0.75rem;
+	font-family: var(--tos-font-pixel);
+	font-weight: 400;
+	line-height: 1.5;
+	overflow-wrap: anywhere;
+}
+
+.page-header .page-title {
+	font-size: clamp(0.9rem, 2vw, 1.15rem);
+	color: var(--tos-blue);
+}
+
+.archive-description {
+	color: var(--tos-purple);
+}
+
+.archive-description > :last-child {
+	margin-bottom: 0;
+}
+
+.entry-title {
+	font-size: clamp(1rem, 2.4vw, 1.4rem);
+	color: var(--tos-win, var(--tos-blue));
+}
+
+h2.entry-title {
+	font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+}
+
+.entry-title a,
+.entry-title a:visited {
+	color: var(--tos-win, var(--tos-blue));
+	text-decoration: none;
+}
+
+.entry-title a:hover {
+	background: var(--tos-win, var(--tos-blue));
+	color: var(--tos-white);
+}
+
+.sticky-label {
+	margin: 0;
+	color: var(--tos-red);
+	font-family: var(--tos-font-pixel);
+	font-size: 0.625rem;
+}
+
+.entry-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 2ch;
+	margin: 0 0 1rem;
+	padding: 0;
+	list-style: none;
+	font-size: 1.25rem;
+}
+
+.entry-meta a,
+.entry-meta a:visited {
+	color: var(--tos-blue);
+}
+
+.entry-type {
+	margin: 0 0 0.5rem;
+}
+
+.post-thumbnail {
+	display: block;
+	margin: 0 0 1.25rem;
+	line-height: 0;
+}
+
+.post-thumbnail img {
+	width: 100%;
+	border: 2px solid var(--tos-black);
+}
+
+a.post-thumbnail:hover {
+	background: none;
+}
+
+.entry-summary p:last-child {
+	margin-bottom: 0;
+}
+
+.more-link {
+	white-space: nowrap;
+}
+
+.entry-footer {
+	margin-top: 1.5rem;
+	padding-top: 0.75rem;
+	border-top: 2px dashed var(--tos-ltgray);
+}
+
+.entry-footer p {
+	margin: 0.25rem 0;
+}
+
+.tags-links a {
+	display: inline-block;
+	margin: 0 0.5ch 0.25rem 0;
+	padding: 0 0.5ch;
+	border: 1px solid currentColor;
+	text-decoration: none;
+}
+
+.tags-links a::before {
+	content: "#";
+	color: var(--tos-green);
+}
+
+.edit-link a {
+	color: var(--tos-brown);
+}
+
+.tos-window--panic {
+	--tos-win-bg: var(--tos-white);
+}
+
+.tos-terminal {
+	margin: 0 0 1.25rem;
+	padding: 1rem;
+	border: 2px solid var(--tos-black);
+	background: var(--tos-white);
+	color: var(--tos-blue);
+	font-family: var(--tos-font-body);
+	font-size: 1.25rem;
+	line-height: 1.3;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+/* 9. Content typography ------------------------------------------------- */
+
+.entry-content {
+	overflow-wrap: break-word;
+}
+
+.entry-content::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.entry-content h1,
+.entry-content h2,
+.entry-content h3,
+.entry-content h4,
+.entry-content h5,
+.entry-content h6,
+.comments-title,
+.comment-reply-title {
+	margin: 2rem 0 0.75rem;
+	font-family: var(--tos-font-pixel);
+	font-weight: 400;
+	line-height: 1.5;
+}
+
+.entry-content h1 { font-size: 1.25rem; color: var(--tos-blue); }
+.entry-content h2 { font-size: 1.05rem; color: var(--tos-red); }
+.entry-content h3 { font-size: 0.9rem; color: var(--tos-purple); }
+.entry-content h4 { font-size: 0.8rem; color: var(--tos-green); }
+.entry-content h5 { font-size: 0.7rem; color: var(--tos-cyan); }
+.entry-content h6 { font-size: 0.65rem; color: var(--tos-brown); }
+
+.entry-content h2::before {
+	content: "$ ";
+	color: var(--tos-green);
+}
+
+p,
+ul,
+ol,
+dl,
+pre,
+table,
+blockquote,
+figure {
+	margin: 0 0 1.1rem;
+}
+
+ul {
+	list-style: square;
+}
+
+ul li::marker {
+	color: var(--tos-red);
+}
+
+ol li::marker {
+	color: var(--tos-green);
+}
+
+ul,
+ol {
+	padding-left: 1.75rem;
+}
+
+dt {
+	color: var(--tos-purple);
+}
+
+dd {
+	margin: 0 0 0.5rem 2ch;
+}
+
+strong,
+b {
+	color: var(--tos-red);
+	font-weight: 400;
+	text-shadow: 1px 0 0 currentColor;
+}
+
+em,
+i,
+cite {
+	color: var(--tos-purple);
+}
+
+mark,
+ins {
+	background: var(--tos-yellow);
+	color: var(--tos-blue);
+	text-decoration: none;
+}
+
+del {
+	color: var(--tos-dkgray);
+}
+
+abbr[title] {
+	text-decoration: underline dotted;
+}
+
+hr {
+	height: 6px;
+	margin: 2rem 0;
+	border: 0;
+	background: linear-gradient(
+		90deg,
+		var(--tos-red) 0 16.66%,
+		var(--tos-brown) 16.66% 33.33%,
+		var(--tos-green) 33.33% 50%,
+		var(--tos-cyan) 50% 66.66%,
+		var(--tos-blue) 66.66% 83.33%,
+		var(--tos-purple) 83.33% 100%
+	);
+}
+
+blockquote {
+	position: relative;
+	margin-left: 0;
+	margin-right: 0;
+	padding: 1rem 1.25rem 1rem 3rem;
+	background: var(--tos-yellow);
+	border: 2px solid var(--tos-brown);
+	color: var(--tos-blue);
+}
+
+blockquote::before {
+	content: "\201C";
+	position: absolute;
+	top: 0.5rem;
+	left: 0.9rem;
+	color: var(--tos-red);
+	font-family: var(--tos-font-pixel);
+	font-size: 1.5rem;
+	line-height: 1;
+}
+
+blockquote > :last-child {
+	margin-bottom: 0;
+}
+
+blockquote cite {
+	display: block;
+	margin-top: 0.5rem;
+	color: var(--tos-brown);
+	font-style: normal;
+}
+
+blockquote cite::before {
+	content: "-- ";
+}
+
+code,
+kbd,
+samp,
+pre {
+	font-family: var(--tos-font-body);
+	font-size: 1em;
+}
+
+code {
+	color: var(--tos-green);
+}
+
+kbd {
+	padding: 0 0.5ch;
+	border: 1px solid var(--tos-blue);
+	box-shadow: 2px 2px 0 var(--tos-blue);
+}
+
+pre {
+	position: relative;
+	padding: 1.5rem 1rem 1rem;
+	overflow-x: auto;
+	border: 2px solid var(--tos-cyan);
+	background: var(--tos-white);
+	color: var(--tos-blue);
+	line-height: 1.25;
+	tab-size: 2;
+}
+
+pre::before {
+	content: "HolyC";
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 0.15rem 0.5rem;
+	background: var(--tos-cyan);
+	color: var(--tos-white);
+	font-family: var(--tos-font-pixel);
+	font-size: 0.5rem;
+}
+
+pre code {
+	color: inherit;
+}
+
+.tos-terminal::before {
+	content: none;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 2px solid var(--tos-blue);
+}
+
+th,
+td {
+	padding: 0.25rem 0.75rem;
+	border: 1px solid var(--tos-blue);
+	text-align: left;
+	vertical-align: top;
+}
+
+th {
+	background: var(--tos-blue);
+	color: var(--tos-white);
+	font-weight: 400;
+}
+
+tbody tr:nth-child(even) td {
+	background: #eeeeff;
+}
+
+caption {
+	padding: 0.25rem 0;
+	color: var(--tos-purple);
+}
+
+/* 10. Forms and buttons ------------------------------------------------- */
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+	color: inherit;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+	width: 100%;
+	max-width: 100%;
+	padding: 0.25rem 0.5rem;
+	border: 2px solid var(--tos-blue);
+	border-radius: 0;
+	background: var(--tos-white);
+	color: var(--tos-blue);
+	appearance: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	outline: none;
+	border-color: var(--tos-red);
+	background: #ffffee;
+}
+
+textarea {
+	min-height: 8rem;
+	resize: vertical;
+}
+
+label {
+	color: var(--tos-purple);
+}
+
+.tos-button,
+button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+.wp-block-button__link {
+	display: inline-block;
+	padding: 0.55rem 0.9rem;
+	border: 2px solid var(--tos-blue);
+	border-radius: 0;
+	background: var(--tos-white);
+	color: var(--tos-blue);
+	box-shadow: var(--tos-shadow);
+	font-family: var(--tos-font-pixel);
+	font-size: 0.625rem;
+	line-height: 1.4;
+	text-decoration: none;
+	appearance: none;
+}
+
+a.tos-button:visited {
+	color: var(--tos-blue);
+}
+
+.tos-button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover {
+	background: var(--tos-blue);
+	color: var(--tos-yellow);
+}
+
+.tos-button:active,
+button:active,
+input[type="submit"]:active {
+	transform: translate(2px, 2px);
+	box-shadow: 2px 2px 0 var(--tos-blue);
+}
+
+.search-form {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem 0;
+}
+
+.search-form label {
+	display: contents;
+}
+
+.search-form__cmd {
+	color: var(--tos-dkgray);
+	white-space: nowrap;
+}
+
+.search-form .search-field {
+	flex: 1 1 6rem;
+	width: auto;
+	min-width: 0;
+	margin: 0 0.25ch;
+}
+
+.search-form .search-submit {
+	margin-left: 0.75rem;
+}
+
+/* 11. Widgets ----------------------------------------------------------- */
+
+/*
+ * Block widgets (WordPress adds a few on new sites) have their own heading
+ * inside a group. The first heading joins the window border like a classic
+ * widget title, and the default block styles are rebuilt for the palette.
+ */
+.widget_block .wp-block-group > :last-child,
+.widget_block .wp-block-group__inner-container > :last-child {
+	margin-bottom: 0;
+}
+
+.wp-block-search__label {
+	display: block;
+	margin-bottom: 0.25rem;
+}
+
+.wp-block-search__inside-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+.wp-block-search__input {
+	flex: 1 1 8rem;
+	width: auto;
+}
+
+.wp-block-latest-comments {
+	padding-left: 1.25rem;
+}
+
+.widget {
+	font-size: 1.25rem;
+}
+
+.widget ul {
+	margin: 0;
+	padding-left: 1.25rem;
+}
+
+.widget li {
+	margin: 0.2rem 0;
+}
+
+.widget select {
+	width: 100%;
+}
+
+.tos-oracle__prompt {
+	margin: 0 0 0.25rem;
+	color: var(--tos-dkgray);
+}
+
+.tos-oracle__words {
+	min-height: 3.5em;
+	margin: 0 0 1rem;
+	font-size: 1.625rem;
+	line-height: 1.15;
+	word-spacing: 0.25ch;
+}
+
+.footer-widgets {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 0 var(--tos-gap);
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 1rem 16px 0;
+}
+
+/* 12. Comments ---------------------------------------------------------- */
+
+.comments-title,
+.comment-reply-title {
+	margin-top: 0.5rem;
+	font-size: 0.85rem;
+	color: var(--tos-green);
+}
+
+.comment-list,
+.comment-list .children {
+	margin: 0 0 1.5rem;
+	padding: 0;
+	list-style: none;
+}
+
+.comment-list .children {
+	margin: 1rem 0 0 1.5rem;
+	padding-left: 1rem;
+	border-left: 4px double var(--tos-cyan);
+}
+
+.comment-list li::marker {
+	content: none;
+}
+
+.comment-body {
+	margin-bottom: 1rem;
+	padding: 1rem;
+	border: 2px dashed var(--tos-ltgray);
+}
+
+.bypostauthor > .comment-body {
+	border-color: var(--tos-purple);
+	border-style: solid;
+}
+
+.comment-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25rem 1rem;
+	margin-bottom: 0.5rem;
+	font-size: 1.125rem;
+}
+
+.comment-author {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.comment-author .avatar {
+	border: 2px solid var(--tos-blue);
+	image-rendering: pixelated;
+}
+
+.comment-author .fn {
+	color: var(--tos-red);
+	font-style: normal;
+}
+
+.comment-author .says {
+	display: none;
+}
+
+.comment-metadata a,
+.comment-metadata a:visited {
+	color: var(--tos-dkgray);
+}
+
+.comment-awaiting-moderation {
+	color: var(--tos-brown);
+}
+
+.reply {
+	margin-top: 0.5rem;
+}
+
+.comment-reply-link,
+.comment-reply-link:visited {
+	color: var(--tos-blue);
+}
+
+.comment-form p {
+	margin-bottom: 0.9rem;
+}
+
+.comment-form label {
+	display: block;
+}
+
+.comment-form-cookies-consent {
+	display: flex;
+	gap: 0.75rem;
+	align-items: flex-start;
+}
+
+.comment-form-cookies-consent label {
+	display: inline;
+}
+
+.comment-notes,
+.logged-in-as {
+	color: var(--tos-dkgray);
+}
+
+.required {
+	color: var(--tos-red);
+}
+
+/* 13. Navigation and pagination ----------------------------------------- */
+
+.nav-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	align-items: stretch;
+	margin: 0 0 2.5rem;
+}
+
+.pagination .page-numbers {
+	display: inline-block;
+	min-width: 2.5rem;
+	padding: 0.25rem 0.6rem;
+	border: 2px solid var(--tos-blue);
+	color: var(--tos-blue);
+	text-align: center;
+	text-decoration: none;
+}
+
+.pagination .page-numbers.current {
+	background: var(--tos-blue);
+	color: var(--tos-yellow);
+}
+
+.pagination .page-numbers.dots {
+	border-color: transparent;
+}
+
+.post-navigation .nav-links > div {
+	flex: 1 1 14rem;
+}
+
+.post-navigation a,
+.post-navigation a:visited {
+	display: block;
+	height: 100%;
+	padding: 0.75rem 1rem;
+	border: 4px double var(--tos-purple);
+	color: var(--tos-blue);
+	text-decoration: none;
+}
+
+.post-navigation a:hover {
+	background: var(--tos-purple);
+	color: var(--tos-white);
+}
+
+.post-navigation .nav-next {
+	text-align: right;
+}
+
+.post-navigation .nav-subtitle {
+	display: block;
+	color: var(--tos-green);
+	font-family: var(--tos-font-pixel);
+	font-size: 0.5625rem;
+	margin-bottom: 0.25rem;
+}
+
+.post-navigation a:hover .nav-subtitle {
+	color: var(--tos-yellow);
+}
+
+.comment-navigation .nav-links {
+	justify-content: space-between;
+	margin-bottom: 1rem;
+}
+
+.page-links {
+	clear: both;
+	margin: 1.5rem 0 0;
+}
+
+.page-links .post-page-numbers {
+	display: inline-block;
+	margin-left: 0.5ch;
+	padding: 0 0.5ch;
+	border: 2px solid var(--tos-blue);
+	text-decoration: none;
+}
+
+.page-links .post-page-numbers.current {
+	background: var(--tos-blue);
+	color: var(--tos-yellow);
+}
+
+/* 14. Footer ------------------------------------------------------------ */
+
+.site-footer {
+	margin-top: 1rem;
+	padding: 1.5rem 16px 2rem;
+	border-top: var(--tos-border) double var(--tos-blue);
+	text-align: center;
+	font-size: 1.25rem;
+}
+
+.site-footer p {
+	margin: 0 0 0.35rem;
+}
+
+.footer-navigation {
+	margin-bottom: 1rem;
+}
+
+.footer-navigation .tos-menu {
+	justify-content: center;
+}
+
+.tos-prompt {
+	margin-top: 1rem;
+	color: var(--tos-dkgray);
+}
+
+/* 15. WordPress core classes -------------------------------------------- */
+
+.screen-reader-text {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute !important;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+.screen-reader-text:focus {
+	clip: auto !important;
+	clip-path: none;
+	display: block;
+	height: auto;
+	left: 8px;
+	top: 8px;
+	width: auto;
+	z-index: 100000;
+	padding: 0.75rem 1rem;
+	background: var(--tos-yellow);
+	color: var(--tos-blue);
+	font-family: var(--tos-font-pixel);
+	font-size: 0.75rem;
+	text-decoration: none;
+	box-shadow: var(--tos-shadow);
+}
+
+.alignleft {
+	float: left;
+	margin: 0.25rem 1.5rem 1rem 0;
+}
+
+.alignright {
+	float: right;
+	margin: 0.25rem 0 1rem 1.5rem;
+}
+
+.aligncenter {
+	display: block;
+	clear: both;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.alignnone {
+	margin: 0 0 1rem;
+}
+
+.wp-caption {
+	max-width: 100%;
+	margin-bottom: 1.25rem;
+	padding: 0.5rem;
+	border: 2px solid var(--tos-blue);
+	background: var(--tos-white);
+}
+
+.wp-caption img {
+	display: block;
+	margin: 0 auto;
+}
+
+.wp-caption-text,
+.gallery-caption,
+figcaption {
+	margin: 0.5rem 0 0;
+	color: var(--tos-purple);
+	font-size: 1.125rem;
+	text-align: center;
+}
+
+.gallery {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1rem;
+	margin-bottom: 1.25rem;
+}
+
+.gallery-columns-1 { grid-template-columns: minmax(0, 1fr); }
+.gallery-columns-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gallery-columns-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.gallery-columns-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.gallery-columns-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.gallery-columns-7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.gallery-columns-8 { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+.gallery-columns-9 { grid-template-columns: repeat(9, minmax(0, 1fr)); }
+
+.gallery-item {
+	margin: 0;
+	text-align: center;
+}
+
+.gallery-item img {
+	border: 2px solid var(--tos-blue);
+}
+
+.sticky {
+	display: block;
+}
+
+.bypostauthor {
+	display: block;
+}
+
+.wp-embedded-content,
+.wp-video,
+.wp-audio-shortcode {
+	max-width: 100%;
+}
+
+.tos-sprite.pixelated,
+img.pixelated {
+	image-rendering: pixelated;
+}
+
+/* 16. Motion ------------------------------------------------------------ */
+
+.tos-no-blink .tos-blink,
+.tos-no-blink .tos-cursor {
+	animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tos-blink,
+	.tos-cursor {
+		animation: none;
+	}
+
+	.tos-cpu__fill {
+		transition: none;
+	}
+}
+
+/* 17. Small screens ----------------------------------------------------- */
+
+@media (max-width: 960px) {
+	.tos-desktop {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.tos-statusbar__cpu {
+		margin-left: 0;
+	}
+}
+
+@media (max-width: 800px) {
+	.main-navigation .menu-toggle {
+		display: inline-block;
+	}
+
+	.main-navigation {
+		flex-basis: 100%;
+	}
+
+	.main-navigation .tos-menu {
+		display: none;
+		flex-direction: column;
+		margin-top: 1rem;
+		padding: 0.5rem;
+		border: 4px double var(--tos-blue);
+	}
+
+	.main-navigation.toggled .tos-menu {
+		display: flex;
+	}
+
+	.tos-menu ul,
+	.tos-menu ul ul {
+		position: static;
+		display: block;
+		min-width: 0;
+		margin-left: 1rem;
+		padding: 0;
+		border: 0;
+		box-shadow: none;
+	}
+
+	.tos-menu .menu-item-has-children > a::after,
+	.tos-menu .page_item_has_children > a::after {
+		content: none;
+	}
+}
+
+@media (max-width: 782px) {
+	.admin-bar .tos-statusbar {
+		top: 46px;
+	}
+}
+
+@media (max-width: 600px) {
+	:root {
+		--tos-border: 5px;
+		--tos-gap: 1.5rem;
+	}
+
+	body {
+		font-size: 1.25rem;
+	}
+
+	.admin-bar .tos-statusbar {
+		top: 0;
+		position: relative;
+	}
+
+	.tos-statusbar__cpu,
+	.tos-statusbar__mem {
+		display: none;
+	}
+
+	.tos-window {
+		padding: 1.75rem 1rem 1rem;
+		box-shadow: 4px 4px 0 var(--tos-win);
+	}
+
+	.tos-window__title,
+	.widget .widget-title,
+	.widget_block .wp-block-heading:first-child {
+		left: 1rem;
+		transform: none;
+		max-width: calc(100% - 5rem);
+	}
+
+	.alignleft,
+	.alignright {
+		float: none;
+		margin: 0 0 1rem;
+	}
+
+	.gallery {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+/* 18. Print ------------------------------------------------------------- */
+
+@media print {
+	.tos-statusbar,
+	.main-navigation,
+	.widget-area,
+	.footer-widgets,
+	.tos-window__close,
+	.post-navigation,
+	.comment-respond,
+	.tos-prompt {
+		display: none !important;
+	}
+
+	.tos-desktop {
+		display: block;
+	}
+
+	.tos-window {
+		box-shadow: none;
+	}
+}
